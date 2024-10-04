@@ -59,6 +59,19 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
+//update product
+app.put('/api/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const product = req.body;
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(id, product  , {new: true}); //new: true will return the updated product
+        res.status(200).json({success: true, data: updatedProduct});    
+    } catch (error) {
+        console.error('Error in Update product:', error);
+        res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+} );
+
 //run the server
 app.listen(5000, () => {
     connectDB();
