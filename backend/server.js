@@ -8,12 +8,15 @@ dotenv.config();
 
 const app = express();
 
+//allow to accept json data in the body of request
+app.use(express.json());
+
 //get request
 app.get('/', (req, res) => {
     res.send('Server is ready');
 });
 //post request for product
-app.post('/', async (req, res) => {
+app.post('/api/products', async (req, res) => {
     const product = req.body; //user will send this data
 
     if(!product.name || !product.price || !product.image) {
