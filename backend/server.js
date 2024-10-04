@@ -15,6 +15,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send('Server is ready');
 });
+
 //post request for product
 app.post('/api/products', async (req, res) => {
     const product = req.body; //user will send this data
@@ -30,6 +31,30 @@ app.post('/api/products', async (req, res) => {
         res.status(201).json({success: true, data: createdProduct});
     } catch (error) {   
         console.error('Error in Create product:', error);
+        res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+});
+
+//delete request for product
+app.delete('/api/products/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await Product.findByIdAndDelete(id);
+        res.json({success: true, message: 'Product deleted successfully'});
+    } catch (error) {
+        console.error('Error in Delete product:', error);
+        res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+});
+
+//get all products
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await Product.find({});
+        res.status(200).json({success: true, data: products});
+    } catch (error) {
+        console.error('Error in Fetch products:', error);
         res.status(500).json({success: false, message: 'Internal Server Error'});
     }
 });
