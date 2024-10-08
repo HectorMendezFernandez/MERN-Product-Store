@@ -1,9 +1,10 @@
-import { Button, Container, Flex, HStack, Link, Text} from "@chakra-ui/react";
-import { FaPlusSquare } from 'react-icons/fa';
+import { Button, Container, Flex, HStack, Link, Text, useColorMode} from "@chakra-ui/react";
+import { FaPlusSquare, FaSun, FaMoon } from 'react-icons/fa';
 
 export function Navbar() {
+    const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Container maxW="container.xl" bg="gray.100" p={4}>
+    <Container maxW="container.xl" px={4}>
       <Flex
         justifyContent="space-between"
         h={16}
@@ -25,12 +26,14 @@ export function Navbar() {
         </Text>
         <HStack spacing={2} alignItems={"center"}>
           <Link href="/create">
-            <Button colorScheme="blue">
+            <Button>
                 <FaPlusSquare size={20} />
             </Button>
           </Link>
           <Link href="/products">
-            <Button colorScheme="blue">Products</Button>
+            <Button onClick={toggleColorMode}>
+                {colorMode === "light" ? <FaSun></FaSun> : <FaMoon></FaMoon>}
+            </Button>
           </Link>
         </HStack>
       </Flex>
