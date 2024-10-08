@@ -1,5 +1,6 @@
 import { Box, Button, Container, Heading, Input, useColorModeValue, VStack } from "@chakra-ui/react"
 import { useState } from "react"
+import { useProductStore } from "../store/product";
 
 export function CreatePage() {
     const [newProduct, setNewProduct] = useState({
@@ -8,9 +9,13 @@ export function CreatePage() {
         price: 0,
         image: "",
       });
+    //use the global state and use the createProduct function from that global state
+    const {createProduct} = useProductStore()
 
     const handleAddProduct = async () => {
-        console.log(newProduct)
+        const {success, message} = await createProduct(newProduct);
+        console.log(success);
+        console.log(message);
     }
 
   return (
