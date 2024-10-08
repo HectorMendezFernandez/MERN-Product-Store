@@ -1,7 +1,7 @@
-const CreatePage = () => {
+export function CreatePage() {
   return (
     <div>CreatePage</div>
   )
-}
+}   
 
 export default CreatePage
