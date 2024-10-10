@@ -1,5 +1,4 @@
 import {create} from "zustand"
-
 //global states
 export const useProductStore = create((set) => ({
     products: [],
@@ -21,8 +20,18 @@ export const useProductStore = create((set) => ({
         return {success: true, message: "Product Create Successfully"};
     },
     fetchProducts: async () => {
-        const response = await fetch("api/products");
+        const response = await fetch("/api/products");
         const data = await response.json();
         set({products: data.data});
     },  
+    deleteProduct: async (id) => {
+        const response = await fetch(`/api/products/${id}`, {
+            method: "DELETE",
+        });
+        const data = await response.json();
+        if(!data.success) return {success: false, message: data.message}
+        //update the state by removing the deleted product and is going to update the UI inmediately without refreshing the page
+        set((state) => ({products: state.products.filter((product) => product._id !== id)}));
+        return {success: true, message: data.message};
+    }
 }))
