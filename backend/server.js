@@ -24,3 +24,8 @@ app.listen(PORT, () => {
     connectDB();
     console.log('Server is running on port ' + PORT + ' ->  http://localhost:' + PORT);
 });
+
+
+// MONGO_URI=mongodb+srv://hfmendez25:h6yuuH6iJMfPPpBJ@cluster0.e6ukl.mongodb.net/products?retryWrites=true&w=majority&appName=Cluster0
+
+// PORT=5000
