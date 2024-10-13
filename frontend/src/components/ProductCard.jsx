@@ -22,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useProductStore } from "../store/product";
+import { useEffect } from "react";
 import { useState } from "react";
 
 export function ProductCard({ product }) {
@@ -29,10 +30,15 @@ export function ProductCard({ product }) {
   const bg = useColorModeValue("white", "gray.700");
   const [updatedProduct, setUpdatedProduct] = useState(product);
 
-  const { deleteProduct } = useProductStore();
-  //use the toast hook from chakra ui
+  const { deleteProduct, updateProduct } = useProductStore();
   const toast = useToast();
-  //method to delete a product
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // Actualiza el estado de updatedProduct cuando product cambia
+  useEffect(() => {
+    setUpdatedProduct(product);
+  }, [product]);
+
   const handleDeleteProduct = async (pid) => {
     const { success, message } = await deleteProduct(pid);
     if (success) {
@@ -54,7 +60,29 @@ export function ProductCard({ product }) {
     }
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const handleUpdateProduct = async (pid, updatedProduct) => {
+    const { success, message } = await updateProduct(pid, updatedProduct);
+  
+    if (success) {
+      toast({
+        title: "Product Updated",
+        description: "Product updated successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      onClose();  // Cierra el modal solo si la actualización fue exitosa
+    } else {
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+  
 
   return (
     <Box
@@ -101,17 +129,52 @@ export function ProductCard({ product }) {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={4}>
-              <Input placeholder="Product Name" name="name" value={updatedProduct.name}/>
-              <Input placeholder="Product Description" name="description" value={updatedProduct.description}/>
-              <Input placeholder="Product Price" name="price" value={updatedProduct.price}/>
-              <Input placeholder="Product Image" name="image" value={updatedProduct.image}/>
+              <Input
+                placeholder="Product Name"
+                name="name"
+                value={updatedProduct.name}
+                onChange={(e) =>
+                  setUpdatedProduct({ ...updatedProduct, name: e.target.value })
+                }
+              />
+              <Input
+                placeholder="Product Description"
+                name="description"
+                value={updatedProduct.description}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    description: e.target.value,
+                  })
+                }
+              />
+              <Input
+                placeholder="Product Price"
+                name="price"
+                value={updatedProduct.price}
+                onChange={(e) =>
+                  setUpdatedProduct({ ...updatedProduct, price: e.target.value })
+                }
+              />
+              <Input
+                placeholder="Product Image"
+                name="image"
+                value={updatedProduct.image}
+                onChange={(e) =>
+                  setUpdatedProduct({ ...updatedProduct, image: e.target.value })
+                }
+              />
             </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => handleUpdateProduct(product._id, updatedProduct)}
+            >
               Update
             </Button>
-            <Button variant={'ghost'} mr={3} onClick={onClose}>
+            <Button variant={"ghost"} mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>
@@ -120,6 +183,6 @@ export function ProductCard({ product }) {
     </Box>
   );
 }
-// value={updateProduct.name} onChange={(e)=> setUpdateProduct({...updateProduct, name: e.target})}
+
 
 export default ProductCard;
